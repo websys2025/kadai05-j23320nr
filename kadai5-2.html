@@ -4,16 +4,32 @@
     <title>演習課題5-2：外部APIの呼び出しテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
+    <h1 id="msg">NASAのAPI</h1>
     <form name="apiform"><p>
         何かのフォーム：<input type="text" name="form_data">
         <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
     </p></form>
-    
+
+      <div id="result">入力方法:yyyy-mm-dd</div>
     <div id="result"></div>
     <script>
         async function some_api(myForm) {
-            // ここにコードを書く
+          // NASA APOD API を呼び出して結果を表示する
+          const query = myForm.form_data.value;
+          const endpoint = `https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=${query}`;
+
+    const response = await fetch(endpoint);
+    const data = await response.json();
+
+    if (data.url) {
+        document.getElementById("result").innerHTML += `
+            <h2>${data.title}</h2>
+            <img src="${data.url}" alt="NASA image" style="max-width: 100%;"><br />
+            <p>${data.explanation}</p>
+            <hr />
+        `;
+    }  
+          // ここにコードを書く
             document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
             document.apiform.reset();
         }
